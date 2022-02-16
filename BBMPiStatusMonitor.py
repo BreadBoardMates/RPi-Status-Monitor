@@ -51,19 +51,12 @@ if __name__ == '__main__':
 
     mates.begin(115200)
 
-    global gtime
     gtime = up()
-    global lastCpuUse
     lastCpuUse = 0
-    global lastTemp
     lastTemp = 0
-    global lastlTemp
     lastlTemp = 0
-    global lastRamUse
     lastRamUse = 0
-    global lastWIPaddr
     lastWIPaddr = '0.0.0.0'
-    global lastEIPaddr
     lastEIPaddr = '0.0.0.0'
 
     mates.updateTextArea(5, gtime, True)
