@@ -47,9 +47,12 @@ def get_interface_ipaddress(network):
 
 if __name__ == '__main__':
 
-    mates = MatesController('/dev/ttyS0')
+    mates = MatesController('/dev/ttyAMA0')
 
     mates.begin(115200)
+    print("===========================")
+    print("TIMI-130 Status Monitor")
+    print("Press CTRL + C to exit.")
 
     gtime = up()
     lastCpuUse = 0
