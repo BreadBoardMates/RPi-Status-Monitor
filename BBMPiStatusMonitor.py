@@ -44,12 +44,35 @@ def get_interface_ipaddress(network):
     except OSError:
         return '0.0.0.0'
 
+def get_rpi_model():
+    model = "Unknown Raspberry Pi Model"
+    try:
+        with open("/proc/cpuinfo", "r") as f:
+            for line in f:
+                if line.startswith("Model"):
+                    model = line.split(":")[1].strip()
+                    break
+    except FileNotFoundError:
+        model="Could not determine Raspberry Pi model (no /proc/cpuinfo found)"
+    except Exception as e:
+        model = f"An error occured: (e)"
+
+    return model 
+
 
 if __name__ == '__main__':
 
-    mates = MatesController('/dev/ttyS0')
+    rpi_model = get_rpi_model()
+
+    if "Pi 5" in rpi_model:
+        mates = MatesController('/dev/ttyAMA0')
+    else:
+        mates = MatesController('/dev/serial0')
 
     mates.begin(115200)
+    print("===========================")
+    print(rpi_model, ": TIMI-130 Status Monitor")
+    print("Press CTRL + C to exit.")
 
     gtime = up()
     lastCpuUse = 0
@@ -64,7 +87,7 @@ if __name__ == '__main__':
     lastlTemp = int(cpu.temperature * 10)
 
     IPinterval = 0
-
+    
     while True:
         cpu = CPUTemperature()
         gcpu = int(cpu.temperature)
@@ -120,3 +143,4 @@ if __name__ == '__main__':
             mates.updateTextArea(5, tempTime, True)
             gtime = tempTime
         time.sleep(0.040)
+    
